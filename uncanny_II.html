@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kyoto Map</title>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<!-- MarkerCluster CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+    #map {
+        height: 100%;
+        width: 100%;
+    }
+    /* Popup image styling */
+    .popup-img {
+        max-width: 200px;
+        border-radius: 8px;
+    }
+    /* Sleek muted cluster colors */
+    .marker-cluster-small {
+        background-color: rgba(255, 105, 180, 0.4) !important;
+        color: white;
+    }
+    .marker-cluster-medium {
+        background-color: rgba(255, 105, 180, 0.6) !important;
+        color: white;
+    }
+    .marker-cluster-large {
+        background-color: rgba(255, 105, 180, 0.8) !important;
+        color: white;
+    }
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- MarkerCluster JS -->
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+<script>
+    // Black & white basemap (Carto Positron)
+    const map = L.map('map').setView([35.03, 135.77], 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+    }).addTo(map);
+
+    // Location data [lat, lng, title, image]
+    const locations = [
+        [35.050832, 135.764815, "Kyoto Botanical Gardens Kitayama Gate - Entrance Flowers", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Kyoto_Montage_2021.jpg/640px-Kyoto_Montage_2021.jpg"],
+        [35.050910, 135.765411, "Garden of Fine Arts Kyoto - Water Droplets Splash", "https://upload.wikimedia.org/wikipedia/commons/9/9e/Togetsukyo_Bridge_in_Arashiyama%2C_Kyoto.jpg"],
+        [35.049380, 135.783392, "Kyoto D-Lab Digital Factory - Entrance Door", "https://upload.wikimedia.org/wikipedia/commons/4/4b/Kinkaku-ji_in_Kyoto_City.jpg"],
+        [35.0494792385254, 135.78308452924995, "Kyoto D-Lab Biomaterial Factory - Fuzzy Growth", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Kyoto_Montage_2021.jpg/640px-Kyoto_Montage_2021.jpg"],
+        [35.04381756643472, 135.7686946204792, "Takeuchi Building - Letterhead Swab", "https://upload.wikimedia.org/wikipedia/commons/9/9e/Togetsukyo_Bridge_in_Arashiyama%2C_Kyoto.jpg"],
+        [35.052176, 135.801972, "Rinkyu-ji - Rain Puddle at Entrance", "https://upload.wikimedia.org/wikipedia/commons/4/4b/Kinkaku-ji_in_Kyoto_City.jpg"],
+        [35.038513871944744, 135.77297365074668, "Shimogamo Romon Tower Gate Entrance", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Kyoto_Montage_2021.jpg/640px-Kyoto_Montage_2021.jpg"],
+        [35.036475927204755, 135.7724325770189, "Tadasu no Mori Stream", "https://upload.wikimedia.org/wikipedia/commons/9/9e/Togetsukyo_Bridge_in_Arashiyama%2C_Kyoto.jpg"],
+        [35.03582639280549, 135.77226858688567, "Sawata Shrine", "https://upload.wikimedia.org/wikipedia/commons/4/4b/Kinkaku-ji_in_Kyoto_City.jpg"],
+        [35.03440879822148, 135.7722329432176, "Mitsui Shrine (Shimogamo) - Leaf Imprint", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Kyoto_Montage_2021.jpg/640px-Kyoto_Montage_2021.jpg"],
+        [35.03403234762503, 135.7725287059864, "Shimogamo Walkway Entrance - Small Tori Swab", "https://upload.wikimedia.org/wikipedia/commons/9/9e/Togetsukyo_Bridge_in_Arashiyama%2C_Kyoto.jpg"],
+        [35.02940619931638, 135.7713508646993, "Kamogawa Delta Stepping Stones - Rock Swab", "https://upload.wikimedia.org/wikipedia/commons/4/4b/Kinkaku-ji_in_Kyoto_City.jpg"],
+        [35.03031977774956, 135.77185139685884, "Kamogawa Delta Pines - Open lid 1hour", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Kyoto_Montage_2021.jpg/640px-Kyoto_Montage_2021.jpg"],
+        [35.029873611528416, 135.77179838259116, "Kamogawa Delta - Ground rock swab", "https://upload.wikimedia.org/wikipedia/commons/9/9e/Togetsukyo_Bridge_in_Arashiyama%2C_Kyoto.jpg"],
+        [35.030220597407876, 135.7737886172912, "Demachiyanagi Vending Machine - Button Swab", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Kyoto_Montage_2021.jpg/640px-Kyoto_Montage_2021.jpg"],
+        [35.030220597407876, 135.7737886172912, "Hyakumanben Bike Parking - Ticketing Machine Swab", "https://upload.wikimedia.org/wikipedia/commons/9/9e/Togetsukyo_Bridge_in_Arashiyama%2C_Kyoto.jpg"],
+        [35.0285340624543, 135.786316405665, "Yoshida Shrine Kita San-do Entrance - Open- lid hike", "https://upload.wikimedia.org/wikipedia/commons/4/4b/Kinkaku-ji_in_Kyoto_City.jpg"],
+        [35.02662890165938, 135.7955649281817, "Philosopher's Path I - Bridge Swab", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Kyoto_Montage_2021.jpg/640px-Kyoto_Montage_2021.jpg"],
+        [35.02272676492732, 135.79756549591235, "Honen-in Temple - Rock Swab", "https://upload.wikimedia.org/wikipedia/commons/9/9e/Togetsukyo_Bridge_in_Arashiyama%2C_Kyoto.jpg"],
+        [35.020170559003724, 135.79389884417768, "Philosopher's Path II - Direction Sign Swab", "https://upload.wikimedia.org/wikipedia/commons/4/4b/Kinkaku-ji_in_Kyoto_City.jpg"],
+        [35.01706908201358, 135.77313056524812, "Club METRO - Entrance swab", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Kyoto_Montage_2021.jpg/640px-Kyoto_Montage_2021.jpg"],
+        [35.01391897022208, 135.7808753473747, "ROHM Theatre Kyoto South Hall - Entrance Swab", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Kyoto_Montage_2021.jpg/640px-Kyoto_Montage_2021.jpg"],
+        [35.01256930647346, 135.78280845154796, "Heian Jingu Shrine Grand Tori - Swab", "https://upload.wikimedia.org/wikipedia/commons/9/9e/Togetsukyo_Bridge_in_Arashiyama%2C_Kyoto.jpg"],
+        [35.01269574472968, 135.7830425454168, "Kyoto City KYOCERA Museum of Art - Viewing Spot Rail swab", "https://upload.wikimedia.org/wikipedia/commons/4/4b/Kinkaku-ji_in_Kyoto_City.jpg"],
+        [35.012608238597316, 135.78411289659834, "Kyoto City KYOCERA Museum of Art - Japanese Gardens", "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Kyoto_Montage_2021.jpg/640px-Kyoto_Montage_2021.jpg"]
+    ];
+
+    // Create marker cluster group
+    const markers = L.markerClusterGroup();
+
+    locations.forEach(loc => {
+        const marker = L.circleMarker([loc[0], loc[1]], {
+            radius: 8,
+            fillColor: "rgba(255, 105, 180, 0.6)",
+            color: "rgba(255, 105, 180, 0.8)",
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.6
+        });
+        marker.bindPopup(`<b>${loc[2]}</b><br><img src="${loc[3]}" class="popup-img">`);
+        markers.addLayer(marker);
+    });
+
+    map.addLayer(markers);
+</script>
+
+</body>
+</html>
