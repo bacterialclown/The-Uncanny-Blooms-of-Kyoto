@@ -7,17 +7,12 @@
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <!-- MarkerCluster CSS (for clustering numbers) -->
+  <!-- MarkerCluster CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
   <style>
     html, body, #map { height: 100%; margin: 0; }
-    /* Muted pink accent circle markers */
-    .accent {
-      /* not used directly; styling is set in JS */
-    }
-    /* Optional: softer cluster bubble shades */
     .marker-cluster-small { background: rgba(255,105,180,0.35); color:#fff; }
     .marker-cluster-medium { background: rgba(255,105,180,0.55); color:#fff; }
     .marker-cluster-large { background: rgba(255,105,180,0.75); color:#fff; }
@@ -33,7 +28,6 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
   <script>
-    // Light, black-and-white style basemap (Carto Positron)
     const map = L.map('map', { scrollWheelZoom: true });
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> & <a href="https://carto.com/">CARTO</a>',
@@ -41,7 +35,7 @@
       maxZoom: 19
     }).addTo(map);
 
-    // Your original locations: [lat, lng, title]
+    // Fixed locations array
     const locations = [
       [35.050832, 135.764815, "Kyoto Botanical Gardens Kitayama Gate - Entrance Flowers"],
       [35.050910, 135.765411, "Garden of Fine Arts Kyoto - Water Droplets Splash"],
@@ -57,6 +51,8 @@
       [35.02940619931638, 135.7713508646993, "Kamogawa Delta Stepping Stones - Rock Swab"],
       [35.03031977774956, 135.77185139685884, "Kamogawa Delta Pines - Open lid 1hour"],
       [35.029873611528416, 135.77179838259116, "Kamogawa Delta - Ground rock swab"],
+      [35.03008474370446, 135.7717923175234, "Kamogawa Delta - Barbeque Sign"],
+      [35.03082574199666, 135.77220722515366, "Kamogawa Delta Tokugawa Bridge - Plant Sample"],
       [35.0285340624543, 135.786316405665, "Yoshida Shrine Kita San-do Entrance - Open- lid hike"],
       [35.02662890165938, 135.7955649281817, "Philosopher's Path I - Bridge Swab"],
       [35.02272676492732, 135.79756549591235, "Honen-in Temple - Rock Swab"],
@@ -65,18 +61,21 @@
       [35.01391897022208, 135.7808753473747, "ROHM Theatre Kyoto South Hall - Entrance Swab"],
       [35.01256930647346, 135.78280845154796, "Heian Jingu Shrine Grand Tori - Swab"],
       [35.01269574472968, 135.7830425454168, "Kyoto City KYOCERA Museum of Art - Viewing Spot Rail swab"],
-      [35.012608238597316, 135.78411289659834, "Kyoto City KYOCERA Museum of Art - Japanese Gardens"]
+      [35.012608238597316, 135.78411289659834, "Kyoto City KYOCERA Museum of Art - Japanese Gardens"],
+      [35.03297332882252, 135.77774962752125, "Mototanaka Apartment Building - Doorhandle Swab"],
+      [35.03297332882252, 135.77774962752125, "Demachiyanagi Station South Entrance - Right-side Ticket Dispenser Screen Swab"],
+      [35.0437230468999, 135.7967396640408, "Hachidai Shrine - Cotton Swab"],
+      [35.04396394946672, 135.78732420437797, "Ichijoji Station - Train Barrier Swab"],
+      [35.029345539615335, 135.78837013716438, "Shigagoe Michi - Canal Barrier Swab"]
     ];
 
-    // Marker cluster (keeps the map fast and clickable)
     const cluster = L.markerClusterGroup();
-
-    // Collect bounds as we add markers
     const bounds = [];
+
     locations.forEach(([lat, lng, title]) => {
       const m = L.circleMarker([lat, lng], {
         radius: 8,
-        fillColor: "rgba(255, 105, 180, 0.55)", // muted pink
+        fillColor: "rgba(255, 105, 180, 0.55)",
         color: "rgba(255, 105, 180, 0.85)",
         weight: 2,
         opacity: 1,
@@ -88,7 +87,6 @@
 
     map.addLayer(cluster);
 
-    // Fit the map to your points (fallback center if something odd happens)
     if (bounds.length) {
       map.fitBounds(bounds, { padding: [20, 20] });
     } else {
