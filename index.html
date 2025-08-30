@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
   <title>The Uncanny Blooms of Kyoto — Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -12,7 +12,9 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
   <style>
-    html, body, #map { height: 100%; margin: 0; }
+    html, body { margin: 0; padding: 0; height: 100%; }
+    #map { width: 100%; height: 100vh; }
+    /* Muted pink accent cluster bubbles */
     .marker-cluster-small { background: rgba(255,105,180,0.35); color:#fff; }
     .marker-cluster-medium { background: rgba(255,105,180,0.55); color:#fff; }
     .marker-cluster-large { background: rgba(255,105,180,0.75); color:#fff; }
@@ -28,15 +30,31 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
   <script>
-    const map = L.map('map', { scrollWheelZoom: true });
+    // Initialize map
+    var map = L.map('map');
+
+    // Add basemap (Carto Light)
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> & <a href="https://carto.com/">CARTO</a>',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 19
     }).addTo(map);
 
-    // Fixed locations array
-    const locations = [
+    // Marker cluster group
+    var markers = L.markerClusterGroup();
+
+    // Marker style
+    var pinkMarker = {
+      radius: 8,
+      fillColor: "rgba(255,100,120,0.6)",
+      color: "rgba(255,100,120,0.85)",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.6
+    };
+
+    // Your locations
+    var locations = [
       [35.050832, 135.764815, "Kyoto Botanical Gardens Kitayama Gate - Entrance Flowers"],
       [35.050910, 135.765411, "Garden of Fine Arts Kyoto - Water Droplets Splash"],
       [35.049380, 135.783392, "Kyoto D-Lab Digital Factory - Entrance Door"],
@@ -63,35 +81,24 @@
       [35.01269574472968, 135.7830425454168, "Kyoto City KYOCERA Museum of Art - Viewing Spot Rail swab"],
       [35.012608238597316, 135.78411289659834, "Kyoto City KYOCERA Museum of Art - Japanese Gardens"],
       [35.03297332882252, 135.77774962752125, "Mototanaka Apartment Building - Doorhandle Swab"],
-      [35.03297332882252, 135.77774962752125, "Demachiyanagi Station South Entrance - Right-side Ticket Dispenser Screen Swab"],
+      [35.0303808491346, 135.7732914373636, "Demachiyanagi Station South Entrance - Right-side Ticket Dispenser Screen Swab"],
       [35.0437230468999, 135.7967396640408, "Hachidai Shrine - Cotton Swab"],
       [35.04396394946672, 135.78732420437797, "Ichijoji Station - Train Barrier Swab"],
       [35.029345539615335, 135.78837013716438, "Shigagoe Michi - Canal Barrier Swab"]
     ];
 
-    const cluster = L.markerClusterGroup();
-    const bounds = [];
-
-    locations.forEach(([lat, lng, title]) => {
-      const m = L.circleMarker([lat, lng], {
-        radius: 8,
-        fillColor: "rgba(255, 105, 180, 0.55)",
-        color: "rgba(255, 105, 180, 0.85)",
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.6
-      }).bindPopup(`<b>${title}</b>`);
-      cluster.addLayer(m);
-      bounds.push([lat, lng]);
+    // Add markers
+    var bounds = [];
+    locations.forEach(function(loc) {
+      var marker = L.circleMarker([loc[0], loc[1]], pinkMarker).bindPopup("<b>" + loc[2] + "</b>");
+      markers.addLayer(marker);
+      bounds.push([loc[0], loc[1]]);
     });
 
-    map.addLayer(cluster);
+    map.addLayer(markers);
+    if (bounds.length) map.fitBounds(bounds, { padding: [20, 20] });
+    else map.setView([35.0116, 135.7681], 13);
 
-    if (bounds.length) {
-      map.fitBounds(bounds, { padding: [20, 20] });
-    } else {
-      map.setView([35.0116, 135.7681], 12);
-    }
   </script>
 </body>
 </html>
