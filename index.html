@@ -32,8 +32,8 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/markercluster.js"></script>
 
   <script>
-    // Initialize map with a default center and zoom
-    var map = L.map('map').setView([35.0116, 135.7681], 13);
+    // Initialize map
+    var map = L.map('map');
 
     // Add basemap (Carto Light)
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -55,9 +55,9 @@
       fillOpacity: 0.6
     };
 
-    // All locations
+    // All locations (first location has image)
     var locations = [
-      [35.050832, 135.764815, "Kyoto Botanical Gardens Kitayama Gate - Entrance Flowers"],
+      [35.050832, 135.764815, "Kyoto Botanical Gardens Kitayama Gate - Entrance Flowers", "https://bacterialclown.github.io/The-Uncanny-Blooms-of-Kyoto/Botanical_gardens_northentrance_flowers.png"],
       [35.050910, 135.765411, "Garden of Fine Arts Kyoto - Water Droplets Splash"],
       [35.049380, 135.783392, "Kyoto D-Lab Digital Factory - Entrance Door"],
       [35.0494792385254, 135.78308452924995, "Kyoto D-Lab Biomaterial Factory - Fuzzy Growth"],
@@ -89,7 +89,7 @@
       [35.029345539615335, 135.78837013716438, "Shigagoe Michi - Canal Barrier Swab"]
     ];
 
-    // Add markers with optional pop-up images
+    // Add markers with popups
     var bounds = [];
     locations.forEach(function(loc) {
       var popupContent = "<b>" + loc[2] + "</b>";
@@ -106,6 +106,7 @@
     // Fit map to markers
     if (bounds.length) map.fitBounds(bounds, { padding: [20, 20] });
     else map.setView([35.0116, 135.7681], 13);
+
   </script>
 </body>
 </html>
