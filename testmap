@@ -35,7 +35,8 @@
 
   // Example location with image popup
   var marker = L.circleMarker([35.050832, 135.764815], pinkMarker).addTo(map);
-  marker.bindPopup("<b>Kyoto Botanical Gardens Kitayama Gate - Entrance Flowers</b><br><img src='https://bacterialclown.github.io/The-Uncanny-Blooms-of-Kyoto/Botanical_gardens_northentrance_flowers.png' class='popup-img'>");
+  marker.bindPopup("<b>Kyoto Botanical Gardens Kitayama Gate - Entrance Flowers</b><br><img src='https://bacterialclown.github.io/The-Uncanny-Blooms-of-Kyoto/images/Botanical_gardens_northentrance_flowers.png
+' class='popup-img'>");
 </script>
 </body>
 </html>
