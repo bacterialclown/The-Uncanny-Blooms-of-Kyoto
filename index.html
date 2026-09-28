@@ -12,7 +12,6 @@
 <style>
 html, body { margin:0; padding:0; height:100%; }
 #map { width:100%; height:100vh; }
-.muted-tiles { filter: grayscale(100%) brightness(1.1) contrast(0.85); }
 .marker-cluster-small { background: rgba(255,105,180,0.35); color:#fff; }
 .marker-cluster-medium { background: rgba(255,105,180,0.55); color:#fff; }
 .marker-cluster-large { background: rgba(255,105,180,0.75); color:#fff; }
@@ -29,12 +28,14 @@ html, body { margin:0; padding:0; height:100%; }
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
+  var CARTO_KEY = "cb1_41ef_1_e40085a426ba16f9dcb31d60";
+
   var map = L.map('map').setView([35.0116, 135.7681], 13);
 
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19,
-    className: 'muted-tiles'
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=' + CARTO_KEY, {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
   }).addTo(map);
 
   var markers = L.markerClusterGroup();
