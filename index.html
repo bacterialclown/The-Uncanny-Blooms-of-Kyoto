@@ -12,6 +12,7 @@
 <style>
 html, body { margin:0; padding:0; height:100%; }
 #map { width:100%; height:100vh; }
+.muted-tiles { filter: grayscale(100%) brightness(1.1) contrast(0.85); }
 .marker-cluster-small { background: rgba(255,105,180,0.35); color:#fff; }
 .marker-cluster-medium { background: rgba(255,105,180,0.55); color:#fff; }
 .marker-cluster-large { background: rgba(255,105,180,0.75); color:#fff; }
@@ -30,10 +31,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
   var map = L.map('map').setView([35.0116, 135.7681], 13);
 
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-    maxNativeZoom: 16,
-    maxZoom: 19
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19,
+    className: 'muted-tiles'
   }).addTo(map);
 
   var markers = L.markerClusterGroup();
